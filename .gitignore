@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local config and secrets
+.env
+.env.*
+local_config.yaml
+secrets.*
+
+# Data, checkpoints, and large generated files
+data/
+datasets/
+raw_data/
+processed_data/
+checkpoints/
+weights/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.h5
+*.mat
+*.npy
+*.npz
+
+# Experiment outputs
+outputs/
+results/
+runs/
+logs/
+wandb/
+tensorboard/
+*.log
+
+# Notebooks
+.ipynb_checkpoints/

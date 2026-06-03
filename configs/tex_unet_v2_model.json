@@ -1,0 +1,16 @@
+{
+  "activation_checkpoint": false,
+  "bound_outputs": true,
+  "channels": [64, 128, 256, 352, 480],
+  "depths": [2, 2, 2, 2, 2],
+  "e_code_dim": 64,
+  "e_wavelength_hidden_dim": 384,
+  "head_hidden_channels": 256,
+  "hsi_wavelength_encoding": true,
+  "hsi_wavelength_hidden_dim": 128,
+  "num_bands": 64,
+  "spectral_refine_depth": 0,
+  "trunk_channels": 240,
+  "wavelength_max_um": 14.0,
+  "wavelength_min_um": 6.0
+}

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use TeX-1500 or TeX-UNet, please cite the paper."
+title: "TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition"
+authors:
+  - family-names: Dai
+    given-names: Cheng
+  - family-names: Lin
+    given-names: Jiale
+  - family-names: Xu
+    given-names: Hongyi
+  - family-names: Song
+    given-names: Bingxuan
+  - family-names: Xie
+    given-names: Ziyang
+  - family-names: Bao
+    given-names: Fanglin
+year: 2026
+url: "https://github.com/dccc2025/TeX-1500"
+repository-code: "https://github.com/dccc2025/TeX-1500"
+identifiers:
+  - type: other
+    value: "arXiv:2606.03806"
+    description: "arXiv preprint"

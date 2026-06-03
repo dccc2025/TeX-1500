@@ -1,0 +1,14 @@
+inference:
+  num_bands: 64
+  min_band_coverage: 5
+  patch_size: 224
+  stride: 112
+  spatial_mode: tiled
+  blend_window: raised_cosine
+  blend_min_weight: 0.4
+  blend_gaussian_sigma: 0.25
+  precision: bf16
+  seed: 20260527
+  batch_size: 16
+  full_pad_multiple: 16
+  save_png: true

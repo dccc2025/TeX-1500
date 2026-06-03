@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tex1500"
+version = "0.1.0"
+description = "Inference-only TeX-UNet baseline for TeX-1500 LWIR HSI temperature-emissivity-texture decomposition."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Cheng Dai" },
+  { name = "Jiale Lin" },
+  { name = "Hongyi Xu" },
+  { name = "Bingxuan Song" },
+  { name = "Ziyang Xie" },
+  { name = "Fanglin Bao" },
+]
+dependencies = [
+  "huggingface-hub>=0.23",
+  "matplotlib>=3.7",
+  "numpy>=1.24",
+  "pyyaml>=6.0",
+  "safetensors>=0.4",
+  "scipy>=1.10",
+  "torch>=2.1,<2.8",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+tex1500-infer = "tex1500.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/dccc2025/TeX-1500"
+Paper = "https://arxiv.org/pdf/2606.03806"
+Dataset = "https://huggingface.co/datasets/jialelin2007/TeX-1500"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tex1500"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
