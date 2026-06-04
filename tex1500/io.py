@@ -47,12 +47,17 @@ def ensure_hwc(array: np.ndarray, *, channel_axis: str = "auto") -> np.ndarray:
         raise ValueError("channel_axis must be 'auto', '0', or '-1'")
 
     first, second, third = arr.shape
-    last_looks_channel = third <= 512 and third <= max(first, second)
-    first_looks_channel = first <= 512 and first < min(second, third)
+    last_looks_channel = third <= 512 and (third <= max(first, second) or third >= max(first, second))
+    first_looks_channel = first <= 512 and (first < min(second, third) or first >= max(second, third))
     if last_looks_channel and not first_looks_channel:
         return np.ascontiguousarray(arr)
     if first_looks_channel and not last_looks_channel:
         return np.ascontiguousarray(np.moveaxis(arr, 0, -1))
+    if last_looks_channel and first_looks_channel:
+        if third > first:
+            return np.ascontiguousarray(arr)
+        if first > third:
+            return np.ascontiguousarray(np.moveaxis(arr, 0, -1))
     if last_looks_channel:
         return np.ascontiguousarray(arr)
     raise ValueError(

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -61,3 +62,49 @@ class TeXUNetNormalizer:
 
     def denormalize_temperature_np(self, value: np.ndarray) -> np.ndarray:
         return self.temperature.denormalize_np(value)
+
+
+def normalizer_from_mapping(mapping: dict[str, Any] | None) -> TeXUNetNormalizer:
+    """Build a normalizer from a Hugging Face `normalization.json` mapping."""
+
+    if not mapping:
+        return TeXUNetNormalizer()
+    if isinstance(mapping.get("normalization"), dict):
+        mapping = mapping["normalization"]
+
+    defaults = TeXUNetNormalizer()
+    hsi = mapping.get("hsi") or {}
+    temperature = mapping.get("temperature") or {}
+    wavelength = mapping.get("wavelength") or {}
+
+    return TeXUNetNormalizer(
+        hsi=ValueRange(
+            float(hsi.get("min", defaults.hsi.min_value)),
+            float(hsi.get("max", defaults.hsi.max_value)),
+        ),
+        temperature=ValueRange(
+            float(
+                temperature.get(
+                    "min_K",
+                    temperature.get("min", defaults.temperature.min_value),
+                )
+            ),
+            float(
+                temperature.get(
+                    "max_K",
+                    temperature.get("max", defaults.temperature.max_value),
+                )
+            ),
+        ),
+        wavelength=ValueRange(
+            float(wavelength.get("min_um", wavelength.get("min", defaults.wavelength.min_value))),
+            float(wavelength.get("max_um", wavelength.get("max", defaults.wavelength.max_value))),
+        ),
+        minmax_percentile_low=float(
+            temperature.get("percentile_low", defaults.minmax_percentile_low)
+        ),
+        minmax_percentile_high=float(
+            temperature.get("percentile_high", defaults.minmax_percentile_high)
+        ),
+        eps=float(mapping.get("eps", defaults.eps)),
+    )

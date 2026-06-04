@@ -24,7 +24,7 @@ dependencies = [
   "pyyaml>=6.0",
   "safetensors>=0.4",
   "scipy>=1.10",
-  "torch>=2.1,<2.8",
+  "torch==2.7.1",
 ]
 
 [project.optional-dependencies]
@@ -40,6 +40,7 @@ tex1500-infer = "tex1500.cli:main"
 Homepage = "https://github.com/dccc2025/TeX-1500"
 Paper = "https://arxiv.org/pdf/2606.03806"
 Dataset = "https://huggingface.co/datasets/jialelin2007/TeX-1500"
+Model = "https://huggingface.co/dccc2025/TeX-UNet"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tex1500"]

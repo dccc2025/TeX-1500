@@ -13,21 +13,51 @@ import yaml
 
 from .inference import InferenceConfig, load_model, predict_scene, save_prediction
 from .io import load_hsi_scene, parse_vector
+from .normalization import normalizer_from_mapping
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run TeX-UNet inference on one HSI scene.")
-    parser.add_argument("--input", type=Path, required=True, help="Input .mat, .npy, or .npz HSI file.")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        required=True,
+        help="Input .mat, .npy, or .npz HSI file.",
+    )
     parser.add_argument("--checkpoint", type=Path, required=True, help="TeX-UNet checkpoint path.")
-    parser.add_argument("--output-dir", type=Path, required=True, help="Directory for predicted TeX files.")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        required=True,
+        help="Directory for predicted TeX files.",
+    )
     parser.add_argument("--config", type=Path, default=None, help="Optional YAML inference config.")
-    parser.add_argument("--model-config", type=Path, default=None, help="Optional JSON/YAML model config.")
+    parser.add_argument(
+        "--model-config",
+        type=Path,
+        default=None,
+        help="Optional JSON/YAML model config.",
+    )
+    parser.add_argument(
+        "--normalization-config",
+        type=Path,
+        default=None,
+        help="Optional HF normalization.json used for HSI and temperature scaling.",
+    )
 
     parser.add_argument("--hsi-key", default=None)
     parser.add_argument("--wavelength-key", default=None)
     parser.add_argument("--good-band-key", default=None)
-    parser.add_argument("--wavelengths", default=None, help="Comma list or path to wavelength vector.")
-    parser.add_argument("--good-band-indices", default=None, help="Comma list or path to valid band indices.")
+    parser.add_argument(
+        "--wavelengths",
+        default=None,
+        help="Comma list or path to wavelength vector.",
+    )
+    parser.add_argument(
+        "--good-band-indices",
+        default=None,
+        help="Comma list or path to valid band indices.",
+    )
     parser.add_argument("--channel-axis", choices=("auto", "0", "-1"), default="auto")
     parser.add_argument("--good-band-index-base", choices=("auto", "zero", "one"), default="auto")
 
@@ -37,7 +67,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stride", type=int, default=None)
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--precision", choices=("fp32", "bf16", "fp16"), default=None)
-    parser.add_argument("--device", default=None)
+    parser.add_argument(
+        "--device",
+        default=None,
+        help="CUDA device only, for example cuda or cuda:0.",
+    )
     parser.add_argument("--spatial-mode", choices=("tiled", "full"), default=None)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-png", action="store_true")
@@ -53,8 +87,13 @@ def _read_mapping(path: Path | None) -> dict[str, Any]:
     return yaml.safe_load(text) or {}
 
 
+def _checkpoint_sidecar(args: argparse.Namespace, filename: str) -> Path | None:
+    candidate = args.checkpoint.parent / filename
+    return candidate if candidate.is_file() else None
+
+
 def _build_inference_config(args: argparse.Namespace) -> InferenceConfig:
-    payload = _read_mapping(args.config)
+    payload = _read_mapping(args.config or _checkpoint_sidecar(args, "inference_config.yaml"))
     if "inference" in payload:
         payload = payload["inference"] or {}
     allowed = set(asdict(InferenceConfig()).keys())
@@ -81,7 +120,10 @@ def _build_inference_config(args: argparse.Namespace) -> InferenceConfig:
 def main() -> None:
     args = parse_args()
     config = _build_inference_config(args)
-    model_config = _read_mapping(args.model_config)
+    model_config = _read_mapping(args.model_config or _checkpoint_sidecar(args, "config.json"))
+    normalizer = normalizer_from_mapping(
+        _read_mapping(args.normalization_config or _checkpoint_sidecar(args, "normalization.json"))
+    )
 
     hsi, wavelength, good_idx = load_hsi_scene(
         args.input,
@@ -106,6 +148,7 @@ def main() -> None:
         wavelength_um=wavelength,
         good_band_indices=good_idx,
         config=config,
+        normalizer=normalizer,
     )
     save_prediction(prediction, args.output_dir, save_png=config.save_png)
     print(f"Saved TeX prediction to {args.output_dir}")

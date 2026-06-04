@@ -1,15 +1,57 @@
 # Examples
 
-After downloading one TeX-1500 HSI file and a released checkpoint:
+This release supports CUDA inference only. Install a CUDA-enabled torch wheel
+before running any example.
+
+Download the current HF preview sample:
 
 ```bash
+<<<<<<< HEAD
 uv run tex1500-infer \
   --input data/example/hsi.mat \
   --checkpoint checkpoints/tex_unet_v2_darpa.safetensors \
   --model-config configs/tex_unet_v2_model.json \
   --output-dir outputs/example \
   --config configs/inference.yaml
+=======
+hf download jialelin2007/TeX-1500 \
+  data/sample_0001/hsi.mat \
+  --repo-type dataset \
+  --local-dir data/hf/TeX-1500
+>>>>>>> d26300b (final version)
 ```
 
-Use `--hsi-key`, `--wavelength-key`, and `--good-band-key` if the file uses
-non-standard MATLAB or NumPy keys.
+Download the DARPA checkpoint and metadata:
+
+```bash
+python scripts/download_weights.py --variant tex_unet_v2_darpa
+```
+
+Run inference on one HSI scene:
+
+```bash
+tex1500-infer \
+  --input data/hf/TeX-1500/data/sample_0001/hsi.mat \
+  --checkpoint checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/model.safetensors \
+  --model-config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/config.json \
+  --normalization-config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/normalization.json \
+  --config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/inference_config.yaml \
+  --output-dir outputs/sample_0001_darpa \
+  --device cuda:0
+```
+
+For custom `.mat` files, pass explicit keys when needed:
+
+```bash
+tex1500-infer \
+  --input path/to/custom_hsi.mat \
+  --hsi-key denoised_hsi_original \
+  --wavelength-key working_wav \
+  --good-band-key good_band_indices \
+  --checkpoint checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/model.safetensors \
+  --model-config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/config.json \
+  --normalization-config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/normalization.json \
+  --config checkpoints/hf/TeX-UNet/tex_unet_v2_darpa/inference_config.yaml \
+  --output-dir outputs/custom_darpa \
+  --device cuda:0
+```

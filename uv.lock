@@ -1116,7 +1116,7 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6" },
     { name = "safetensors", specifier = ">=0.4" },
     { name = "scipy", specifier = ">=1.10" },
-    { name = "torch", specifier = ">=2.1,<2.8" },
+    { name = "torch", specifier = "==2.7.1" },
 ]
 provides-extras = ["dev"]
 

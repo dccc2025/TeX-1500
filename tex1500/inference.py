@@ -28,7 +28,7 @@ class InferenceConfig:
     seed: int = 20260527
     batch_size: int = 16
     full_pad_multiple: int = 16
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda"
     save_png: bool = True
 
 
@@ -45,6 +45,8 @@ class Prediction:
 def model_config_from_mapping(mapping: dict[str, Any] | None) -> TeXUNetConfig:
     if not mapping:
         return TeXUNetConfig()
+    if isinstance(mapping.get("model_config"), dict):
+        mapping = mapping["model_config"]
     valid_names = {field.name for field in fields(TeXUNetConfig)}
     return TeXUNetConfig(**{key: value for key, value in mapping.items() if key in valid_names})
 
@@ -53,6 +55,28 @@ def _strip_module_prefix(state_dict: dict[str, torch.Tensor]) -> dict[str, torch
     if not any(key.startswith("module.") for key in state_dict):
         return state_dict
     return {key.removeprefix("module."): value for key, value in state_dict.items()}
+
+
+def require_cuda_device(device: str | torch.device | None = None) -> torch.device:
+    """Resolve and validate the CUDA device required by this release."""
+
+    resolved = torch.device(device or "cuda")
+    if resolved.type != "cuda":
+        raise ValueError(
+            "TeX-UNet inference is GPU-only for this release; pass --device cuda "
+            "or --device cuda:<index>."
+        )
+    if not torch.cuda.is_available():
+        raise RuntimeError(
+            "CUDA is not available in this PyTorch environment. Install a CUDA-enabled "
+            "PyTorch build before running TeX-UNet inference."
+        )
+    if resolved.index is not None and resolved.index >= torch.cuda.device_count():
+        raise ValueError(
+            f"Requested CUDA device index {resolved.index}, but only "
+            f"{torch.cuda.device_count()} device(s) are visible."
+        )
+    return resolved
 
 
 def load_model(
@@ -64,13 +88,17 @@ def load_model(
     path = Path(checkpoint_path)
     if not path.is_file():
         raise FileNotFoundError(f"Checkpoint not found: {path}")
-    device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+    device = require_cuda_device(device)
 
     if path.suffix == ".safetensors":
         from safetensors.torch import load_file
 
         state_dict = load_file(str(path), device="cpu")
-        cfg = model_config if isinstance(model_config, TeXUNetConfig) else model_config_from_mapping(model_config)
+        cfg = (
+            model_config
+            if isinstance(model_config, TeXUNetConfig)
+            else model_config_from_mapping(model_config)
+        )
     else:
         checkpoint = torch.load(path, map_location="cpu")
         if isinstance(checkpoint, dict) and "model" in checkpoint:
@@ -84,7 +112,11 @@ def load_model(
             raw_config = model_config
         else:
             raise TypeError(f"Unsupported checkpoint payload type: {type(checkpoint)!r}")
-        cfg = raw_config if isinstance(raw_config, TeXUNetConfig) else model_config_from_mapping(raw_config)
+        cfg = (
+            raw_config
+            if isinstance(raw_config, TeXUNetConfig)
+            else model_config_from_mapping(raw_config)
+        )
 
     model = TeXUNet(cfg)
     model.load_state_dict(_strip_module_prefix(state_dict), strict=True)
@@ -275,7 +307,11 @@ def _run_tiled(
         wav_tensor = torch.from_numpy(
             np.stack([selected_wavelength_um.astype(np.float32) for _ in batch_coords], axis=0)
         ).to(device=device)
-        with torch.no_grad(), torch.autocast(device_type=device.type, dtype=dtype, enabled=amp_enabled):
+        with torch.no_grad(), torch.autocast(
+            device_type=device.type,
+            dtype=dtype,
+            enabled=amp_enabled,
+        ):
             pred = model(hsi_tensor, wav_tensor)
 
         pred_t = pred["T"].detach().float().cpu().numpy()[:, 0]
@@ -309,6 +345,8 @@ def predict_scene(
     config = config or InferenceConfig()
     normalizer = normalizer or TeXUNetNormalizer()
     device = next(model.parameters()).device
+    if device.type != "cuda":
+        raise ValueError("TeX-UNet inference is GPU-only; the model must be on a CUDA device.")
     hsi = np.asarray(hsi_hwc, dtype=np.float32)
     if hsi.ndim != 3:
         raise ValueError(f"hsi_hwc must be [H,W,C], got {hsi.shape}")
@@ -385,7 +423,12 @@ def predict_scene(
     )
 
 
-def save_prediction(prediction: Prediction, output_dir: str | Path, *, save_png: bool = True) -> None:
+def save_prediction(
+    prediction: Prediction,
+    output_dir: str | Path,
+    *,
+    save_png: bool = True,
+) -> None:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     np.save(output / "T_norm.npy", prediction.temperature_norm)
