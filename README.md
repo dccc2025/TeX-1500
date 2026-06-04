@@ -21,20 +21,6 @@ The dataset and pretrained checkpoints are hosted externally:
 
 ![TeX-UNet architecture](assets/tex_unet_architecture.jpg)
 
-## Release Scope
-
-This GitHub repository intentionally keeps only code, lightweight configs,
-documentation, tests, and one image asset:
-
-```text
-assets/tex_unet_architecture.jpg
-```
-
-The repository does not store training code, raw data, checkpoints, generated
-outputs, optimizer states, experiment logs, or extra paper figures. Local
-directories such as `data/`, `checkpoints/`, and `outputs/` are ignored by Git
-and are intended for downloaded Hugging Face files and local predictions.
-
 ## GPU-Only Rule
 
 This release supports CUDA inference only. CPU inference is not a supported
@@ -175,19 +161,15 @@ Expected outputs:
 
 ```text
 outputs/sample_0001_darpa/
-  T_norm.npy
-  T_kelvin.npy
-  emissivity_norm.npy
-  texture_norm.npy
-  prediction.npz
   prediction.mat
   T.png
   emissivity_midband.png
   texture.png
 ```
 
-`T_kelvin` is denormalized with the released model normalization. `e` and `X`
-are saved in the normalized target space used by the baseline.
+`prediction.mat` contains normalized `T_norm`, denormalized `T_kelvin`,
+normalized `e_norm`, normalized `X_norm`, `wavelength_um`, and `band_indices`.
+The PNG files are visual previews.
 
 ## Checkpoints
 

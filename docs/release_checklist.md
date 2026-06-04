@@ -94,11 +94,6 @@ tex1500-infer \
 Expected prediction files:
 
 ```text
-T_norm.npy
-T_kelvin.npy
-emissivity_norm.npy
-texture_norm.npy
-prediction.npz
 prediction.mat
 T.png
 emissivity_midband.png

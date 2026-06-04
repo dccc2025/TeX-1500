@@ -75,8 +75,8 @@ inference:
 | `e.mat` | `e` | `[260, 1500, 256]` | Spectral emissivity field. |
 | `X.mat` | `X` | `[260, 1500]` | Scalar texture field. |
 
-TeX-UNet predicts normalized `e` and `X`; temperature is also saved as both
-normalized `T_norm` and denormalized `T_kelvin`.
+TeX-UNet predicts normalized `e` and `X`; temperature is written to
+`prediction.mat` as both normalized `T_norm` and denormalized `T_kelvin`.
 
 ## Running On A Sample
 
@@ -98,16 +98,10 @@ is ambiguous. This release is GPU-only; CPU inference is intentionally rejected.
 ## Outputs
 
 ```text
-T_norm.npy
-T_kelvin.npy
-emissivity_norm.npy
-texture_norm.npy
-prediction.npz
 prediction.mat
 T.png
 emissivity_midband.png
 texture.png
 ```
 
-PNG files are previews only. Use `.npy`, `.npz`, or `.mat` outputs for numeric
-evaluation.
+PNG files are previews only. Use `prediction.mat` for numeric evaluation.

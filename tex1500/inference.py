@@ -431,36 +431,19 @@ def save_prediction(
 ) -> None:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    np.save(output / "T_norm.npy", prediction.temperature_norm)
-    np.save(output / "T_kelvin.npy", prediction.temperature_kelvin)
-    np.save(output / "emissivity_norm.npy", prediction.emissivity_norm)
-    np.save(output / "texture_norm.npy", prediction.texture_norm)
-    np.savez_compressed(
-        output / "prediction.npz",
-        T_norm=prediction.temperature_norm,
-        T_kelvin=prediction.temperature_kelvin,
-        emissivity_norm=prediction.emissivity_norm,
-        texture_norm=prediction.texture_norm,
-        wavelength_um=prediction.wavelength_um,
-        band_indices=prediction.band_indices,
+    import scipy.io as sio
+
+    sio.savemat(
+        output / "prediction.mat",
+        {
+            "T_norm": prediction.temperature_norm,
+            "T_kelvin": prediction.temperature_kelvin,
+            "e_norm": prediction.emissivity_norm,
+            "X_norm": prediction.texture_norm,
+            "wavelength_um": prediction.wavelength_um,
+            "band_indices": prediction.band_indices,
+        },
     )
-
-    try:
-        import scipy.io as sio
-
-        sio.savemat(
-            output / "prediction.mat",
-            {
-                "T_norm": prediction.temperature_norm,
-                "T_kelvin": prediction.temperature_kelvin,
-                "e_norm": prediction.emissivity_norm,
-                "X_norm": prediction.texture_norm,
-                "wavelength_um": prediction.wavelength_um,
-                "band_indices": prediction.band_indices,
-            },
-        )
-    except Exception as exc:  # pragma: no cover - optional writer
-        (output / "mat_write_error.txt").write_text(str(exc), encoding="utf-8")
 
     if save_png:
         _save_pngs(prediction, output)
