@@ -4,7 +4,7 @@
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv%3A2606.03806-b31b1b)](https://arxiv.org/abs/2606.03806)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-ffcc4d)](https://huggingface.co/datasets/jialelin2007/TeX-1500)
-[![Model](https://img.shields.io/badge/Model-Hugging%20Face-ffcc4d)](https://huggingface.co/dccc2025/TeX-UNet)
+[![Checkpoints](https://img.shields.io/badge/Checkpoints-Hugging%20Face-ffcc4d)](https://huggingface.co/dccc2025/TeX-UNet)
 [![Code](https://img.shields.io/badge/Code-GitHub-111111)](https://github.com/dccc2025/TeX-1500)
 
 TeX-1500 is a paired LWIR hyperspectral benchmark for temperature `T`,
@@ -16,7 +16,7 @@ examples, and the architecture figure below.
 The dataset and pretrained checkpoints are hosted externally:
 
 - Dataset: https://huggingface.co/datasets/jialelin2007/TeX-1500
-- Model weights: https://huggingface.co/dccc2025/TeX-UNet
+- Checkpoints: https://huggingface.co/dccc2025/TeX-UNet
 - Paper: https://arxiv.org/abs/2606.03806
 
 ![TeX-UNet architecture](assets/tex_unet_architecture.jpg)
