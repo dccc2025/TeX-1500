@@ -2,10 +2,12 @@
 
 **A paired real-world LWIR hyperspectral dataset and benchmark for temperature--emissivity--texture decomposition.**
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv%3A2606.03806-b31b1b)](https://arxiv.org/pdf/2606.03806)
+[![Paper](https://img.shields.io/badge/Paper-arXiv%3A2606.03806-b31b1b)](https://arxiv.org/abs/2606.03806)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-ffcc4d)](https://huggingface.co/datasets/jialelin2007/TeX-1500)
+[![Checkpoints](https://img.shields.io/badge/Checkpoints-Hugging%20Face-ffcc4d)](https://huggingface.co/dccc2025/TeX-UNet)
 [![Code](https://img.shields.io/badge/Code-GitHub-111111)](https://github.com/dccc2025/TeX-1500)
 [![Python](https://img.shields.io/badge/Python-3.10--3.12-3776ab)](https://www.python.org/)
+
 
 TeX-1500 is a paired LWIR hyperspectral benchmark for HADAR-oriented recovery of
 temperature `T`, emissivity `e`, and scalar texture `X`. The dataset contains
@@ -15,18 +17,15 @@ acquisition times, wavelength layouts, and sensor families.
 
 This repository provides the inference-only TeX-UNet baseline: model
 architecture, full-scene variable-band inference, output writers, and a compact
-command line interface. Training code, raw data, and checkpoints are not stored
-in this GitHub repository.
+command line interface. Training code, raw data, and checkpoints are available in other repositories.
 
 ## Paper
 
 **TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition**
 
-Cheng Dai*, Jiale Lin*, Hongyi Xu, Bingxuan Song, Ziyang Xie, and Fanglin Bao
+[Cheng Dai](https://github.com/dccc2025)\*, [Jiale Lin](https://github.com/jialelin2007)\*, Hongyi Xu, Bingxuan Song, Ziyang Xie, and Fanglin Bao
 
-Westlake University
-
-`*` Equal contribution. Corresponding author: Fanglin Bao.
+`*` Equal Contribution. Corresponding author: Fanglin Bao.
 
 ## Dataset
 
@@ -38,11 +37,7 @@ Westlake University
 | FTIR train | Wuhan University, China | 38 | 111 | 7.9--11.5 um | 320x256 | 86 |
 | FTIR test | Wuhan University, China | 16 | 31 | 7.9--11.5 um | 320x256 | 86/124/277 |
 
-Dataset files are hosted on Hugging Face:
-
-```text
-https://huggingface.co/datasets/jialelin2007/TeX-1500
-```
+Dataset files are hosted on [Hugging Face](https://huggingface.co/datasets/jialelin2007/TeX-1500).
 
 ![Spectral coverage](assets/spectral_coverage.png)
 
@@ -82,21 +77,20 @@ uv run tex1500-infer --help
 
 ## Checkpoints
 
-Checkpoints will be released on Hugging Face after the model files are uploaded.
-GitHub should only contain code and lightweight assets. Place downloaded weights
-under `checkpoints/`, for example:
+Released TeX-UNet checkpoints are hosted on [Hugging Face](https://huggingface.co/dccc2025/TeX-UNet).
+Place downloaded weights under `checkpoints/`, for example:
 
 ```text
-checkpoints/tex_unet_v2.pt
+checkpoints/tex_unet_v2_darpa.safetensors
 ```
 
-The download helper is already wired for the expected Hugging Face layout:
+The download helper is wired for the released Hugging Face layout:
 
 ```bash
 uv run python scripts/download_weights.py \
-  --repo-id dccc2025/TeX-1500-baselines \
-  --filename tex_unet_v2/final.pt \
-  --output checkpoints/tex_unet_v2.pt
+  --repo-id dccc2025/TeX-UNet \
+  --filename tex_unet_v2_darpa/model.safetensors \
+  --output checkpoints/tex_unet_v2_darpa.safetensors
 ```
 
 ## Quick Inference
@@ -106,7 +100,7 @@ Run TeX-UNet on one calibrated HSI scene:
 ```bash
 uv run tex1500-infer \
   --input path/to/hsi.mat \
-  --checkpoint checkpoints/tex_unet_v2.pt \
+  --checkpoint checkpoints/tex_unet_v2_darpa.safetensors \
   --model-config configs/tex_unet_v2_model.json \
   --output-dir outputs/example \
   --num-bands 64 \
@@ -147,29 +141,16 @@ outputs/example/
 
 ![FTIR transfer results](assets/tex_unet_ftir_transfer.jpg)
 
-## Repository Scope
-
-This release is intentionally narrow:
-
-- included: TeX-UNet model architecture, inference utilities, CLI, docs, and selected paper assets;
-- excluded: training pipeline, raw/private data, experiment logs, optimizer states, and checkpoints;
-- hosted externally: TeX-1500 dataset and future pretrained checkpoints.
-
 ## Citation
 
 ```bibtex
-@misc{dai2026tex1500,
-  title        = {TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition},
-  author       = {Dai, Cheng and Lin, Jiale and Xu, Hongyi and Song, Bingxuan and Xie, Ziyang and Bao, Fanglin},
-  year         = {2026},
-  archivePrefix = {arXiv},
-  eprint       = {2606.03806},
-  primaryClass = {cs.CV}
+@misc{dai2026tex1500pairedrealworldlwir,
+      title={TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature-Emissivity-Texture Decomposition},
+      author={Cheng Dai and Jiale Lin and Hongyi Xu and Bingxuan Song and Ziyang Xie and Fanglin Bao},
+      year={2026},
+      eprint={2606.03806},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.03806},
 }
 ```
-
-## Acknowledgements
-
-This repository builds on HADAR-style thermal physical decomposition and uses
-the DARPA Invisible Headlights pushbroom imagery together with FTIR acquisitions
-collected by the authors.

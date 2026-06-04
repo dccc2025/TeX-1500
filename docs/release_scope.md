@@ -17,5 +17,5 @@ Excluded:
 - Optimizer states and experiment logs.
 - Large checkpoints.
 
-The TeX-1500 dataset is hosted on Hugging Face. Model checkpoints should also be
-hosted externally and downloaded into `checkpoints/` when needed.
+The TeX-1500 dataset and TeX-UNet checkpoints are hosted separately on Hugging
+Face and downloaded into `checkpoints/` when needed.

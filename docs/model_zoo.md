@@ -1,22 +1,23 @@
 # Model Zoo
 
-Checkpoints are intended to live on Hugging Face rather than inside this GitHub
-repository.
+Checkpoints are hosted on [Hugging Face](https://huggingface.co/dccc2025/TeX-UNet)
+rather than inside this GitHub repository.
 
 | Model | Input bands | Scope | Checkpoint |
 |---|---:|---|---|
-| TeX-UNet v2 DARPA IH | 64 sampled valid bands | DARPA IH test baseline | Coming soon |
-| TeX-UNet v2 FTIR few-shot | 64 sampled valid bands | FTIR few-shot transfer | Coming soon |
+| TeX-UNet v2 DARPA IH | 64 sampled valid bands | DARPA IH test baseline | `tex_unet_v2_darpa/model.safetensors` |
+| TeX-UNet v2 FTIR few-shot | 64 sampled valid bands | FTIR few-shot transfer | `tex_unet_v2_ftir_fewshot/model.safetensors` |
 
-Expected Hugging Face layout:
+Released Hugging Face layout:
 
 ```text
-dccc2025/TeX-1500-baselines
-  tex_unet_v2/
-    final.pt
+dccc2025/TeX-UNet
+  tex_unet_v2_darpa/
+    model.safetensors
+    config.json
+    metrics.json
+  tex_unet_v2_ftir_fewshot/
+    model.safetensors
     config.json
     metrics.json
 ```
-
-After the checkpoint repository is published, update the README and this file
-with exact filenames, hashes, and release notes.
