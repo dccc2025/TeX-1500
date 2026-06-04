@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download TeX-UNet weights from Hugging Face Hub."""
+"""Download TeX-UNet release files from Hugging Face Hub."""
 
 from __future__ import annotations
 
@@ -17,13 +17,6 @@ DEFAULT_FILES = (
 
 
 def parse_args() -> argparse.Namespace:
-<<<<<<< HEAD
-    parser = argparse.ArgumentParser(description="Download released TeX-UNet weights.")
-    parser.add_argument("--repo-id", default="dccc2025/TeX-UNet")
-    parser.add_argument("--filename", default="tex_unet_v2_darpa/model.safetensors")
-    parser.add_argument("--revision", default=None)
-    parser.add_argument("--output", type=Path, default=Path("checkpoints/tex_unet_v2_darpa.safetensors"))
-=======
     parser = argparse.ArgumentParser(description="Download released TeX-UNet files.")
     parser.add_argument("--repo-id", default="dccc2025/TeX-UNet")
     parser.add_argument("--variant", default="tex_unet_v2_darpa")
@@ -54,7 +47,6 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Compatibility mode: output path for --filename.",
     )
->>>>>>> d26300b (final version)
     return parser.parse_args()
 
 

@@ -3,22 +3,13 @@
 This release supports CUDA inference only. Install a CUDA-enabled torch wheel
 before running any example.
 
-Download the current HF preview sample:
+Download the current Hugging Face preview sample:
 
 ```bash
-<<<<<<< HEAD
-uv run tex1500-infer \
-  --input data/example/hsi.mat \
-  --checkpoint checkpoints/tex_unet_v2_darpa.safetensors \
-  --model-config configs/tex_unet_v2_model.json \
-  --output-dir outputs/example \
-  --config configs/inference.yaml
-=======
 hf download jialelin2007/TeX-1500 \
   data/sample_0001/hsi.mat \
   --repo-type dataset \
   --local-dir data/hf/TeX-1500
->>>>>>> d26300b (final version)
 ```
 
 Download the DARPA checkpoint and metadata:

@@ -4,87 +4,45 @@
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv%3A2606.03806-b31b1b)](https://arxiv.org/abs/2606.03806)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-ffcc4d)](https://huggingface.co/datasets/jialelin2007/TeX-1500)
-<<<<<<< HEAD
-[![Checkpoints](https://img.shields.io/badge/Checkpoints-Hugging%20Face-ffcc4d)](https://huggingface.co/dccc2025/TeX-UNet)
-[![Code](https://img.shields.io/badge/Code-GitHub-111111)](https://github.com/dccc2025/TeX-1500)
-[![Python](https://img.shields.io/badge/Python-3.10--3.12-3776ab)](https://www.python.org/)
-
-
-TeX-1500 is a paired LWIR hyperspectral benchmark for HADAR-oriented recovery of
-temperature `T`, emissivity `e`, and scalar texture `X`. The dataset contains
-1,522 calibrated real-scene HSI--TeX pairs from DARPA Invisible Headlights
-pushbroom imagery and FTIR acquisitions, covering multiple locations, seasons,
-acquisition times, wavelength layouts, and sensor families.
-
-This repository provides the inference-only TeX-UNet baseline: model
-architecture, full-scene variable-band inference, output writers, and a compact
-command line interface. Training code, raw data, and checkpoints are available in other repositories.
-
-## Paper
-
-**TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition**
-
-[Cheng Dai](https://github.com/dccc2025)\*, [Jiale Lin](https://github.com/jialelin2007)\*, Hongyi Xu, Bingxuan Song, Ziyang Xie, and Fanglin Bao
-
-`*` Equal Contribution. Corresponding author: Fanglin Bao.
-
-## Dataset
-
-| Split | Location | Scenes | Images | Wavelengths | Spatial size | Bands |
-|---|---:|---:|---:|---|---|---:|
-| DARPA IH train | TPG, AZ / ME / FL | 74 | 1,096 | 6.8--13.2 um | 260x1200 to 480x1700 | 250/256 |
-| DARPA IH valid | Sidewinder Range, TPG, AZ | 8 | 51 | 8.1--13.2 um | 260x1280 | 256 |
-| DARPA IH test | Fort A. P. Hill, VA | 18 | 233 | 8.1--13.2 um | 260x1600 | 256 |
-| FTIR train | Wuhan University, China | 38 | 111 | 7.9--11.5 um | 320x256 | 86 |
-| FTIR test | Wuhan University, China | 16 | 31 | 7.9--11.5 um | 320x256 | 86/124/277 |
-
-Dataset files are hosted on [Hugging Face](https://huggingface.co/datasets/jialelin2007/TeX-1500).
-
-![Spectral coverage](assets/spectral_coverage.png)
-
-## TeX-UNet Baseline
-
-TeX-UNet maps calibrated HSI bands and their wavelength positions to normalized
-TeX fields. During inference, it repeatedly samples 64 valid bands until each
-valid band reaches the requested minimum coverage, runs the network on full
-images or sliding windows, and averages the accumulated predictions.
-=======
 [![Model](https://img.shields.io/badge/Model-Hugging%20Face-ffcc4d)](https://huggingface.co/dccc2025/TeX-UNet)
+[![Code](https://img.shields.io/badge/Code-GitHub-111111)](https://github.com/dccc2025/TeX-1500)
 
 TeX-1500 is a paired LWIR hyperspectral benchmark for temperature `T`,
-emissivity `e`, and scalar texture `X` decomposition. This GitHub repository is
-an inference-only code release. It contains the TeX-UNet architecture, HSI
-loaders, tiled/full-scene inference, output writers, and the architecture figure
-below. Dataset files and pretrained weights are hosted on Hugging Face:
+emissivity `e`, and scalar texture `X` decomposition. This repository is an
+inference-only GitHub release for the TeX-UNet baseline. It includes the model
+architecture, HSI loaders, tiled/full-scene inference, output writers, compact
+examples, and the architecture figure below.
+
+The dataset and pretrained checkpoints are hosted externally:
 
 - Dataset: https://huggingface.co/datasets/jialelin2007/TeX-1500
 - Model weights: https://huggingface.co/dccc2025/TeX-UNet
 - Paper: https://arxiv.org/abs/2606.03806
->>>>>>> d26300b (final version)
 
 ![TeX-UNet architecture](assets/tex_unet_architecture.jpg)
 
-## Release Boundary
+## Release Scope
 
-This repository intentionally does not store training code, raw data,
-checkpoints, generated outputs, optimizer states, experiment logs, or extra
-paper figures. The only tracked image asset is:
+This GitHub repository intentionally keeps only code, lightweight configs,
+documentation, tests, and one image asset:
 
 ```text
 assets/tex_unet_architecture.jpg
 ```
 
-Large local folders such as `data/`, `checkpoints/`, and `outputs/` are ignored
-by Git. Keep downloaded Hugging Face files there for local inference only.
+The repository does not store training code, raw data, checkpoints, generated
+outputs, optimizer states, experiment logs, or extra paper figures. Local
+directories such as `data/`, `checkpoints/`, and `outputs/` are ignored by Git
+and are intended for downloaded Hugging Face files and local predictions.
 
 ## GPU-Only Rule
 
 This release supports CUDA inference only. CPU inference is not a supported
-runtime path. The CLI and Python API will fail if `--device cpu` is used or if
+runtime path. The CLI and Python API reject `--device cpu` and fail if
 `torch.cuda.is_available()` is false.
 
 Install a CUDA-enabled PyTorch build before installing the package. The locked
-release uses torch 2.7.1; the command below uses the official CUDA 12.8 wheel
+release uses torch 2.7.1. The example below uses the official CUDA 12.8 wheel
 index:
 
 ```bash
@@ -102,16 +60,16 @@ python - <<'PY'
 import torch
 print("torch:", torch.__version__)
 print("cuda:", torch.version.cuda)
-print("gpu:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "NOT AVAILABLE")
 if not torch.cuda.is_available():
     raise SystemExit("CUDA-enabled torch is required.")
+print("gpu:", torch.cuda.get_device_name(0))
 PY
 ```
 
 If CUDA 12.8 is not appropriate for your machine, use the official PyTorch CUDA
 index that matches your driver. Do not install from the CPU wheel index.
 
-## Download Hugging Face Files
+## Download Files
 
 The dataset is gated on Hugging Face. Log in and accept the dataset conditions
 before downloading:
@@ -127,24 +85,8 @@ the Hugging Face CLI more predictable:
 export HF_HUB_DISABLE_XET=1
 ```
 
-Download the DARPA TeX-UNet checkpoint and its metadata:
+Download the DARPA TeX-UNet checkpoint and metadata:
 
-<<<<<<< HEAD
-Released TeX-UNet checkpoints are hosted on [Hugging Face](https://huggingface.co/dccc2025/TeX-UNet).
-Place downloaded weights under `checkpoints/`, for example:
-
-```text
-checkpoints/tex_unet_v2_darpa.safetensors
-```
-
-The download helper is wired for the released Hugging Face layout:
-
-```bash
-uv run python scripts/download_weights.py \
-  --repo-id dccc2025/TeX-UNet \
-  --filename tex_unet_v2_darpa/model.safetensors \
-  --output checkpoints/tex_unet_v2_darpa.safetensors
-=======
 ```bash
 python scripts/download_weights.py --variant tex_unet_v2_darpa
 ```
@@ -164,21 +106,11 @@ To download the FTIR few-shot checkpoint instead:
 
 ```bash
 python scripts/download_weights.py --variant tex_unet_v2_ftir_fewshot
->>>>>>> d26300b (final version)
 ```
 
 Download the current public dataset preview sample:
 
 ```bash
-<<<<<<< HEAD
-uv run tex1500-infer \
-  --input path/to/hsi.mat \
-  --checkpoint checkpoints/tex_unet_v2_darpa.safetensors \
-  --model-config configs/tex_unet_v2_model.json \
-  --output-dir outputs/example \
-  --num-bands 64 \
-  --min-band-coverage 5
-=======
 hf download jialelin2007/TeX-1500 \
   data/sample_0001/hsi.mat \
   data/sample_0001/T.mat \
@@ -189,13 +121,7 @@ hf download jialelin2007/TeX-1500 \
   docs/DATA_FORMAT.md \
   --repo-type dataset \
   --local-dir data/hf/TeX-1500
->>>>>>> d26300b (final version)
 ```
-
-As of this release, the Hugging Face dataset page describes `sample_0001` as a
-preview sample and states that the full 1,522-sample dataset will be made
-available later. The inference loader is designed to keep working as future
-samples follow the documented `.mat` layout.
 
 ## Single-HSI Inference
 
@@ -242,8 +168,8 @@ tex1500-infer \
   --device cuda:0
 ```
 
-The default model samples 64 valid bands per pass. The input must therefore
-contain at least 64 valid bands after `good_band_indices` filtering.
+The default model samples 64 valid bands per pass. The input must contain at
+least 64 valid bands after `good_band_indices` filtering.
 
 Expected outputs:
 
@@ -280,30 +206,12 @@ Both checkpoints are released as `safetensors` in `dccc2025/TeX-UNet`.
 | FTIR-zeroshot-test | `tex_unet_v2_darpa` | 5.8309 | 1.9753 | 0.0674 | 0.0451 | 0.0219 | 0.2995 |
 | FTIR-fewshot-test | `tex_unet_v2_ftir_fewshot` | 4.1004 | 1.3830 | 0.0458 | 0.1970 | 0.0220 | 0.2224 |
 
-<<<<<<< HEAD
-![DARPA IH results](assets/tex_unet_darpa_results.jpg)
-
-![FTIR transfer results](assets/tex_unet_ftir_transfer.jpg)
-=======
-`e` and `X` are normalized. See the paper and Hugging Face model files for the
-full evaluation protocol.
->>>>>>> d26300b (final version)
+`e` and `X` are normalized. See the paper and Hugging Face model metadata for
+the full evaluation protocol.
 
 ## Citation
 
 ```bibtex
-<<<<<<< HEAD
-@misc{dai2026tex1500pairedrealworldlwir,
-      title={TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature-Emissivity-Texture Decomposition},
-      author={Cheng Dai and Jiale Lin and Hongyi Xu and Bingxuan Song and Ziyang Xie and Fanglin Bao},
-      year={2026},
-      eprint={2606.03806},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2606.03806},
-}
-```
-=======
 @misc{dai2026tex1500,
   title = {TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition},
   author = {Dai, Cheng and Lin, Jiale and Xu, Hongyi and Song, Bingxuan and Xie, Ziyang and Bao, Fanglin},
@@ -313,4 +221,3 @@ full evaluation protocol.
   primaryClass = {cs.CV}
 }
 ```
->>>>>>> d26300b (final version)

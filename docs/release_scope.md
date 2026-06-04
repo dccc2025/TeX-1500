@@ -23,10 +23,6 @@ Excluded:
 - Large dataset files and checkpoints.
 - Extra paper figures beyond the architecture figure.
 
-<<<<<<< HEAD
-The TeX-1500 dataset and TeX-UNet checkpoints are hosted separately on Hugging
-Face and downloaded into `checkpoints/` when needed.
-=======
 The only tracked image asset should be:
 
 ```text
@@ -35,4 +31,3 @@ assets/tex_unet_architecture.jpg
 
 Local `data/`, `checkpoints/`, and `outputs/` directories are ignored by Git and
 are intended only for downloaded Hugging Face files and generated predictions.
->>>>>>> d26300b (final version)
