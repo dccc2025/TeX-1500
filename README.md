@@ -212,12 +212,13 @@ the full evaluation protocol.
 ## Citation
 
 ```bibtex
-@misc{dai2026tex1500,
-  title = {TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature--Emissivity--Texture Decomposition},
-  author = {Dai, Cheng and Lin, Jiale and Xu, Hongyi and Song, Bingxuan and Xie, Ziyang and Bao, Fanglin},
-  year = {2026},
-  archivePrefix = {arXiv},
-  eprint = {2606.03806},
-  primaryClass = {cs.CV}
+@misc{dai2026tex1500pairedrealworldlwir,
+      title={TeX-1500: A Paired Real-World LWIR Hyperspectral Dataset and Benchmark for Temperature-Emissivity-Texture Decomposition},
+      author={Cheng Dai and Jiale Lin and Hongyi Xu and Bingxuan Song and Ziyang Xie and Fanglin Bao},
+      year={2026},
+      eprint={2606.03806},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.03806},
 }
 ```
